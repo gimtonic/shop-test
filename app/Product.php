@@ -12,7 +12,7 @@ class Product extends Model
      * Связь многие ко многим с таблицей категории
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function category()
+    public function categories()
     {
         return $this->belongsToMany(Category::class);
     }

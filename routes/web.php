@@ -14,3 +14,5 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('catalog/{slug}', 'ProductController@getProducts')->where('slug','[A-Za-z-]+');
