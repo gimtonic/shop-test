@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-
+use App\Product;
 /**
  * Контроллер для работы с категориями
  * Class CategoryController
@@ -18,13 +17,16 @@ class ProductController extends Controller
      */
     public function getProducts(string $slug)
     {
-        $category = Category::where('slug', $slug)->first();
-        if(!$category) {
+
+        $product = Product::where('slug', $slug)
+            ->first();
+
+        if(!$product) {
             abort(404);
         }
 
         return view('product',[
-            'category' => $category
+            'product' => $product
         ]);
     }
 }

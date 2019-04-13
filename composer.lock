@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4731429c7f25ab92eaa813447a972209",
+    "content-hash": "a1ecfdc3f49e8d8d3004cdcba165587b",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -370,6 +370,71 @@
                 "trusted proxy"
             ],
             "time": "2019-01-10T14:06:47+00:00"
+        },
+        {
+            "name": "franzose/closure-table",
+            "version": "v5.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/franzose/ClosureTable.git",
+                "reference": "7a97e6fa0890e531e58133a8aa87488278cfe19f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/franzose/ClosureTable/zipball/7a97e6fa0890e531e58133a8aa87488278cfe19f",
+                "reference": "7a97e6fa0890e531e58133a8aa87488278cfe19f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "doctrine/dbal": "dev-master",
+                "mockery/mockery": "dev-master",
+                "orchestra/testbench": "dev-master",
+                "phpunit/phpunit": "dev-master",
+                "way/laravel-test-helpers": "dev-master",
+                "way/phpunit-wrappers": "dev-master"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Franzose\\ClosureTable\\ClosureTableServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "tests"
+                ],
+                "psr-0": {
+                    "Franzose\\ClosureTable": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Iwanow",
+                    "email": "iwanow.jan@gmail.com",
+                    "homepage": "http://janiwanow.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Adjacency List’ed Closure Table database design pattern implementation for Laravel",
+            "keywords": [
+                "adjacency list",
+                "categories",
+                "closure table",
+                "database",
+                "hierarchy",
+                "laravel",
+                "pages"
+            ],
+            "time": "2018-08-27T20:11:20+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",

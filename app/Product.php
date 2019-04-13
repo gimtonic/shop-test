@@ -1,19 +1,21 @@
 <?php
-
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Franzose\ClosureTable\Models\Entity;
 
-class Product extends Model
+class Product extends Entity implements ProductInterface
 {
-    protected $fillable=['name'];
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'products';
 
     /**
-     * Связь многие ко многим с таблицей категории
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * ClosureTable model instance.
+     *
+     * @var ProductClosure
      */
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class);
-    }
+    protected $closure = 'App\ProductClosure';
 }

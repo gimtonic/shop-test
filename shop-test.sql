@@ -16,56 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `categories`
---
-
-DROP TABLE IF EXISTS `categories`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `categories` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `categories`
---
-
-LOCK TABLES `categories` WRITE;
-/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Женская одежда','jenskaya-odezhda'),(2,'Мужская одежда','mugskaya-odezhda');
-/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `category_product`
---
-
-DROP TABLE IF EXISTS `category_product`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `category_product` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `category_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `category_product`
---
-
-LOCK TABLES `category_product` WRITE;
-/*!40000 ALTER TABLE `category_product` DISABLE KEYS */;
-INSERT INTO `category_product` VALUES (1,1,1),(2,1,2),(3,2,3),(4,2,4);
-/*!40000 ALTER TABLE `category_product` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `migrations`
 --
 
@@ -77,7 +27,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +36,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2019_04_11_132342_categories',1),(4,'2019_04_11_132355_products',1),(5,'2019_04_11_132410_category_product',1),(6,'2019_04_11_133703_add_slug_in_table_categories',2);
+INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2019_04_13_081256_create_products_table_migration',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,6 +65,36 @@ LOCK TABLES `password_resets` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `product_closure`
+--
+
+DROP TABLE IF EXISTS `product_closure`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `product_closure` (
+  `closure_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ancestor` int(10) unsigned NOT NULL,
+  `descendant` int(10) unsigned NOT NULL,
+  `depth` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`closure_id`),
+  KEY `product_closure_ancestor_foreign` (`ancestor`),
+  KEY `product_closure_descendant_foreign` (`descendant`),
+  CONSTRAINT `product_closure_ancestor_foreign` FOREIGN KEY (`ancestor`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `product_closure_descendant_foreign` FOREIGN KEY (`descendant`) REFERENCES `products` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product_closure`
+--
+
+LOCK TABLES `product_closure` WRITE;
+/*!40000 ALTER TABLE `product_closure` DISABLE KEYS */;
+INSERT INTO `product_closure` VALUES (1,1,2,1),(2,1,3,1),(3,2,4,1),(4,2,5,1),(5,1,4,2),(6,1,5,2),(7,3,6,1),(8,1,6,2),(9,9,10,1),(10,9,11,1),(11,10,12,1),(12,10,13,1),(13,10,14,1),(14,11,15,1),(15,9,12,2),(16,9,13,2),(17,9,14,2),(18,9,15,2),(19,9,16,1),(20,9,17,1);
+/*!40000 ALTER TABLE `product_closure` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `products`
 --
 
@@ -122,10 +102,17 @@ DROP TABLE IF EXISTS `products`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `products` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(10) unsigned DEFAULT NULL,
+  `position` int(10) unsigned NOT NULL,
+  `real_depth` int(10) unsigned NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `slug` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `products_parent_id_foreign` (`parent_id`),
+  CONSTRAINT `products_parent_id_foreign` FOREIGN KEY (`parent_id`) REFERENCES `products` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,7 +121,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'Блузы'),(2,'Юбки'),(3,'Футболки'),(4,'Костюмы');
+INSERT INTO `products` VALUES (1,NULL,1,0,'Женская одежда','jenskaya-odezhda',NULL),(2,1,2,1,'Блузы',NULL,NULL),(3,1,3,1,'Юбки',NULL,NULL),(4,2,4,2,'Красная блуза',NULL,NULL),(5,2,5,2,'Белая блуза',NULL,NULL),(6,3,6,2,'Коричневая юбка',NULL,NULL),(7,1,7,0,'Розовые макасины',NULL,NULL),(8,1,8,0,'Леопардовые трусы',NULL,NULL),(9,NULL,9,0,'Мужская одежда','mugskaya-odezhda',NULL),(10,9,10,1,'Футболки',NULL,NULL),(11,9,11,1,'Костюмы',NULL,NULL),(12,10,12,2,'Большая футболка',NULL,NULL),(13,10,13,2,'Маленькая футболка',NULL,NULL),(14,10,14,2,'Cредняя футболка',NULL,NULL),(15,11,15,1,'Стильный костюм',NULL,NULL),(16,9,16,0,'Часы',NULL,NULL),(17,9,17,0,'Чертовски красивый пояс',NULL,NULL);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,4 +164,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-11 17:20:27
+-- Dump completed on 2019-04-13 12:34:19
